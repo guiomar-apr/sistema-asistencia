@@ -1,0 +1,369 @@
+:root {
+    --primary-dark: #0f1d32;
+    --primary-color: #1c2f4a;
+    --primary-light: #2e4261;
+    --text-color: #333;
+    --bg-color: #f0f2f5;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --radius: 14px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: url('../img/fondo1.png') no-repeat center center fixed;
+    background-size: cover;
+    padding: 25px;
+    color: var(--text-color);
+    overflow: hidden;
+}
+
+.page-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Barra superior */
+.top-bar {
+    background: white;
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.top-left,
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.top-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.title-box {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Reloj */
+.clock-box-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.emoji-icon-horizontal {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.clock-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.clock-time {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.clock-date {
+    font-size: 12px;
+    color: #777;
+}
+
+/* Botones superiores */
+.icon-btn,
+.logout-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.icon-btn:hover,
+.logout-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.icon-btn i,
+.logout-btn i,
+.user-info .user-icon {
+    color: var(--primary-color);
+    width: 20px;
+    height: 20px;
+}
+
+/* Usuario */
+.user-info {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    gap: 10px;
+}
+
+.user-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+}
+
+.user-text strong {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.user-text small {
+    font-size: 12px;
+    color: #777;
+}
+
+/* Layout */
+.layout {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Menú lateral */
+.sidebar {
+    background: white;
+    width: 180px;
+    padding: 20px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.menu-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón seleccionado */
+.menu-btn.active-btn {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    transform: scale(1.05);
+    font-weight: 600;
+}
+
+.menu-btn.active-btn i {
+    color: var(--primary-color);
+}
+
+.menu-btn i {
+    width: 18px;
+    height: 18px;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.menu-btn.bottom {
+    margin-top: 40px;
+}
+
+/* Contenido principal */
+.content {
+    flex: 1;
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    overflow-y: auto;
+}
+
+.content-box {
+    padding: 10px;
+}
+
+/* Tabla CRUD */
+.table-crud {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-crud th,
+.table-crud td {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.crud-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-add {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-edit {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #a71d2a;
+}
+
+.btn-add {
+    background-color: #28a745;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.btn-add:hover {
+    background-color: #1c7c31;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content-box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 600px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+    text-align: center;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.modal-clock .big-hour {
+    font-size: 48px;
+    color: var(--primary-color);
+}
+
+.modal-clock .big-date {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.modal-calendar table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modal-calendar th,
+.modal-calendar td {
+    padding: 8px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.modal-calendar th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.modal-calendar td.sunday {
+    background-color: #ffdddd;
+    color: red;
+}
+
+/* Efecto clic al pulsar reloj */
+.clock-box-horizontal:active {
+    animation: pulse 0.3s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
