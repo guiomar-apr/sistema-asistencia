@@ -7,20 +7,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     @yield('styles')
-
 </head>
 <body>
     <div class="page-wrapper">
-        <!-- TOPBAR -->
         @include('partials.barrasuperior')
-
         <div class="layout">
-            <!-- SIDEBAR -->
             @include('partials.barralateral')
 
-            <!-- CONTENIDO -->
             <main class="content">
-                @yield('content')
+                <!-- Contenedor dinámico -->
+                <div id="contenido">
+                    {{-- Se usará solo si accedes directamente a una vista con layout --}}
+                    @yield('content')
+                </div>
             </main>
         </div>
     </div>
@@ -39,15 +38,6 @@
 
     <script>
         lucide.createIcons();
-
-        function mostrarSeccion(id) {
-            document.querySelectorAll('.seccion').forEach(seccion => seccion.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active-btn'));
-            const botonActivo = document.querySelector(`.menu-btn[onclick="mostrarSeccion('${id}')"]`);
-            if (botonActivo) botonActivo.classList.add('active-btn');
-        }
 
         function actualizarReloj() {
             const now = new Date();
@@ -68,8 +58,6 @@
 
         setInterval(actualizarReloj, 1000);
         actualizarReloj();
-
-        document.addEventListener('DOMContentLoaded', () => mostrarSeccion('home'));
 
         function abrirModalHorario() {
             document.getElementById('modal-horario').style.display = 'flex';
@@ -126,8 +114,95 @@
             }
 
             tabla += `</tr></tbody></table>`;
-            document.getElementById('calendario-mes').innerHTML = tabla;
+            document.getElementById("calendario-mes").innerHTML = tabla;
+        }
+
+        function toggleSubmenu(id) {
+            let submenu = document.getElementById(id);
+            submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function mostrarSeccion(seccion) {
+            let url = "";
+
+            // Rutas principales
+            if (seccion === 'home') url = '/home';
+            if (seccion === 'asistencias') url = '/asistencias';
+            if (seccion === 'cronograma') url = '/cronograma';
+            if (seccion === 'reportes') url = '/reportes';
+            if (seccion === 'papeletas') url = '/papeletas';
+
+            // Personal
+            if (seccion === 'ver_personal') url = '/personal';
+            if (seccion === 'agregar_datos') url = '/agregar_datos';
+
+            // CRUD dinámico
+            if (seccion === 'crud/usuarios' || seccion === 'crud/roles') {
+                fetch('/crud')
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("contenido").innerHTML = html;
+                        lucide.createIcons();
+                        setTimeout(() => {
+                            cargarCrud(seccion.split('/')[1]);
+                        }, 100);
+                    })
+                    .catch(error => {
+                        document.getElementById("contenido").innerHTML = `<h2 style="padding: 2rem;">Error al cargar CRUD</h2>`;
+                        console.error("Error al cargar CRUD:", error);
+                    });
+                return;
+            }
+
+            // Si es sección normal
+            if (url !== "") {
+                fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Vista no encontrada');
+                        return response.text();
+                    })
+                    .then(html => {
+                        document.getElementById("contenido").innerHTML = html;
+                        lucide.createIcons();
+                    })
+                    .catch(error => {
+                        document.getElementById("contenido").innerHTML = `<h2 style="padding: 2rem;">Error 404: Vista no encontrada</h2>`;
+                        console.error("Error al cargar:", error);
+                    });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => mostrarSeccion('home'));
+
+        // mostrarFormulario() solo se define por si acaso se usa
+        function mostrarFormulario(id) {
+            document.querySelectorAll('.formulario').forEach(f => f.style.display = 'none');
+            const target = document.getElementById(id);
+            if (target) {
+                target.style.display = 'block';
+            }
         }
     </script>
+
+    <script>
+    function toggleFormulario(id) {
+        let formulario = document.getElementById(id);
+        let yaVisible = formulario && !formulario.classList.contains('oculto');
+        document.querySelectorAll('.card-formulario').forEach(f => f.classList.add('oculto'));
+        if (!yaVisible && formulario) {
+            formulario.classList.remove('oculto');
+        }
+    }
+</script>
+
+
+    @yield('scripts')
+
+
+    
 </body>
 </html>

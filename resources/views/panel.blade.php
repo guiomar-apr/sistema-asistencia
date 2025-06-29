@@ -3,10 +3,8 @@
 @section('title', 'Panel Principal')
 
 @section('content')
-    <div id="home" class="content-box seccion">
-        <h2>Bienvenido al sistema</h2>
-        <p>Contenido principal del sistema.</p>
-
-
-    </div>
+<div style="padding: 2rem;">
+    <h2>Bienvenido al Panel Principal</h2>
+    <p>Desde aquí puedes acceder a las distintas funciones del sistema.</p>
+</div>
 @endsection
