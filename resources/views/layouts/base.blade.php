@@ -15,7 +15,6 @@
             @include('partials.barralateral')
 
             <main class="content">
-                <!-- Contenedor dinámico -->
                 <div id="contenido">
                     {{-- Se usará solo si accedes directamente a una vista con layout --}}
                     @yield('content')
@@ -105,8 +104,7 @@
 
             for (let dia = 1; dia <= diasMes; dia++) {
                 const fecha = new Date(year, month, dia);
-                const esDomingo = fecha.getDay() === 0;
-                const clase = esDomingo ? 'sunday' : '';
+                const clase = (fecha.getDay() === 0) ? 'sunday' : '';
                 tabla += `<td class="${clase}">${dia}</td>`;
                 if (fecha.getDay() === 6 && dia !== diasMes) {
                     tabla += `</tr><tr>`;
@@ -118,67 +116,19 @@
         }
 
         function toggleSubmenu(id) {
-            let submenu = document.getElementById(id);
+            const submenu = document.getElementById(id);
             submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
         }
 
-        function mostrarSeccion(seccion) {
-            let url = "";
-
-            // Rutas principales
-            if (seccion === 'home') url = '/home';
-            if (seccion === 'asistencias') url = '/asistencias';
-            if (seccion === 'cronograma') url = '/cronograma';
-            if (seccion === 'reportes') url = '/reportes';
-            if (seccion === 'papeletas') url = '/papeletas';
-
-            // Personal
-            if (seccion === 'ver_personal') url = '/personal';
-            if (seccion === 'agregar_datos') url = '/agregar_datos';
-
-            // CRUD dinámico
-            if (seccion === 'crud/usuarios' || seccion === 'crud/roles') {
-                fetch('/crud')
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById("contenido").innerHTML = html;
-                        lucide.createIcons();
-                        setTimeout(() => {
-                            cargarCrud(seccion.split('/')[1]);
-                        }, 100);
-                    })
-                    .catch(error => {
-                        document.getElementById("contenido").innerHTML = `<h2 style="padding: 2rem;">Error al cargar CRUD</h2>`;
-                        console.error("Error al cargar CRUD:", error);
-                    });
-                return;
-            }
-
-            // Si es sección normal
-            if (url !== "") {
-                fetch(url, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Vista no encontrada');
-                        return response.text();
-                    })
-                    .then(html => {
-                        document.getElementById("contenido").innerHTML = html;
-                        lucide.createIcons();
-                    })
-                    .catch(error => {
-                        document.getElementById("contenido").innerHTML = `<h2 style="padding: 2rem;">Error 404: Vista no encontrada</h2>`;
-                        console.error("Error al cargar:", error);
-                    });
+        function toggleFormulario(id) {
+            let formulario = document.getElementById(id);
+            let yaVisible = formulario && !formulario.classList.contains('oculto');
+            document.querySelectorAll('.card-formulario').forEach(f => f.classList.add('oculto'));
+            if (!yaVisible && formulario) {
+                formulario.classList.remove('oculto');
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => mostrarSeccion('home'));
-
-        // mostrarFormulario() solo se define por si acaso se usa
         function mostrarFormulario(id) {
             document.querySelectorAll('.formulario').forEach(f => f.style.display = 'none');
             const target = document.getElementById(id);
@@ -186,23 +136,153 @@
                 target.style.display = 'block';
             }
         }
-    </script>
 
-    <script>
-    function toggleFormulario(id) {
-        let formulario = document.getElementById(id);
-        let yaVisible = formulario && !formulario.classList.contains('oculto');
-        document.querySelectorAll('.card-formulario').forEach(f => f.classList.add('oculto'));
-        if (!yaVisible && formulario) {
-            formulario.classList.remove('oculto');
+        function mostrarSeccion(seccion) {
+            let url = "";
+
+            if (seccion === 'home') url = '/home';
+            if (seccion === 'asistencias') url = '/asistencias';
+            if (seccion === 'cronograma') url = '/cronograma';
+            if (seccion === 'reportes') url = '/reportes';
+            if (seccion === 'papeletas') url = '/papeletas';
+
+            if (seccion === 'ver_personal') url = '/personal';
+            if (seccion === 'agregar_datos') url = '/agregar_datos';
+
+            if (seccion === 'crud/usuarios' || seccion === 'crud/roles') {
+                fetch(`/${seccion}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("contenido").innerHTML = html;
+                    lucide.createIcons?.();
+                })
+                .catch(error => {
+                    document.getElementById("contenido").innerHTML = `<h2 style="padding: 2rem;">Error al cargar ${seccion}</h2>`;
+                    console.error("Error al cargar CRUD:", error);
+                });
+                return;
+            }
+
+            if (url !== "") {
+                fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Vista no encontrada');
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById("contenido").innerHTML = html;
+                    lucide.createIcons?.();
+                })
+                .catch(error => {
+                    document.getElementById("contenido").innerHTML = `<h2 style="padding: 2rem;">Error 404: Vista no encontrada</h2>`;
+                    console.error("Error al cargar:", error);
+                });
+            }
+        }
+
+        function mostrarFormularioUsuario() {
+            const contenedor = document.getElementById('contenido-formulario-usuario');
+            contenedor.innerHTML = '<p style="text-align:center;">Cargando...</p>';
+            fetch('/crud/crear-usuario')
+                .then(res => res.text())
+                .then(html => {
+                    contenedor.innerHTML = html;
+                    document.getElementById('modal-crear-usuario').style.display = 'flex';
+                });
+        }
+
+        function cerrarModalUsuario(e) {
+            if (!e || e.target.id === "modal-crear-usuario") {
+                document.getElementById("modal-crear-usuario").style.display = "none";
+            }
+        }
+
+        function mostrarModalEditar(id) {
+            const contenedor = document.getElementById('contenido-formulario-editar');
+            contenedor.innerHTML = '<p style="text-align:center;">Cargando...</p>';
+            fetch('/crud/editar-usuario/' + id)
+                .then(res => res.text())
+                .then(html => {
+                    contenedor.innerHTML = html;
+                    document.getElementById('modal-editar-usuario').style.display = 'flex';
+                });
+        }
+
+        function cerrarModalEditar(e) {
+            if (!e || e.target.id === "modal-editar-usuario") {
+                document.getElementById("modal-editar-usuario").style.display = "none";
+            }
+        }
+
+        function mostrarFormularioRol() {
+            document.getElementById("modal-confirmacion").style.display = "flex";
+        }
+
+        function cerrarModalConfirmacion(e) {
+            if (!e || e.target.id === "modal-confirmacion") {
+                document.getElementById("modal-confirmacion").style.display = "none";
+            }
+        }
+
+        function abrirFormularioRol() {
+            cerrarModalConfirmacion();
+            document.getElementById("modal-rol").style.display = "flex";
+        }
+
+        function cerrarModalRol(e) {
+            if (!e || e.target.id === "modal-rol") {
+                document.getElementById("modal-rol").style.display = "none";
+            }
+        }
+
+        function confirmarCreacionRol() {
+            return confirm("¿Deseas confirmar el registro de este nuevo rol?");
+        }
+
+        document.addEventListener('DOMContentLoaded', () => mostrarSeccion('home'));
+
+        function abrirModalUsuario() {
+    const modal = document.getElementById("modal-crear-usuario");
+    if (modal) {
+        modal.style.display = "flex";
+    } else {
+        console.warn("No se encontró el modal 'modal-crear-usuario'");
+    }
+}
+
+function cerrarModalUsuario(e) {
+    if (!e || e.target.id === "modal-crear-usuario") {
+        const modal = document.getElementById("modal-crear-usuario");
+        if (modal) {
+            modal.style.display = "none";
         }
     }
-</script>
+}
+
+// === MODALES GENERALES PARA PERSONAL / ÁREA / CARGO / PROFESIÓN ===
+function mostrarModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = "flex";
+}
+
+function cerrarModal(event, id) {
+    const modal = document.getElementById(id);
+    if (!event || event.target.id === id) {
+        modal.style.display = "none";
+    }
+}
 
 
-    @yield('scripts')
-
+    </script>
 
     
+
+    @yield('scripts')
 </body>
 </html>

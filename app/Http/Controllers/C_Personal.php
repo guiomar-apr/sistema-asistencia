@@ -10,31 +10,60 @@ use App\Models\Profesion;
 
 class C_Personal extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $personal = Personal::with('area', 'cargo', 'profesion')->get();
-        return view('PERSONAL.ver_personal', compact('personal'));
+        $query = Personal::with(['area', 'cargo', 'profesion']);
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('dni', 'like', "%$buscar%")
+                ->orWhere('nombres', 'like', "%$buscar%")
+                ->orWhere('apellidos', 'like', "%$buscar%");
+            });
+        }
+
+        if ($request->filled('area_id')) {
+            $query->where('area_id', $request->area_id);
+        }
+
+        if ($request->filled('profesion_id')) {
+            $query->where('profesion_id', $request->profesion_id);
+        }
+
+        $personal = $query->get();
+        $areas = Area::all();
+        $profesiones = Profesion::all();
+
+$conteoAreas = Area::withCount('personal')->get();
+
+$conteoProfesiones = Profesion::withCount('personal')->get();
+
+
+        return view('PERSONAL.ver_personal', compact('personal', 'areas', 'profesiones', 'conteoAreas', 'conteoProfesiones'));
     }
 
-    public function crear(Request $request)
+    public function destroy($id)
     {
+        Personal::destroy($id);
+        return redirect()->back()->with('success', 'Personal eliminado correctamente.');
+    }
+
+    public function edit($id)
+    {
+        $personal = Personal::findOrFail($id);
         $areas = Area::all();
         $cargos = Cargo::all();
         $profesiones = Profesion::all();
-
-        // Si es una petición AJAX, no se incluye el layout
-        if ($request->ajax()) {
-            return view('PERSONAL.agregar_personal', compact('areas', 'cargos', 'profesiones'));
-        }
-
-        // Si no es AJAX, retorna la vista completa con layout
-        return view('PERSONAL.agregar_personal', compact('areas', 'cargos', 'profesiones'));
+        return view('PERSONAL.editar_personal', compact('personal', 'areas', 'cargos', 'profesiones'));
     }
 
-    public function store(Request $request)
+    public function update(Request $request, $id)
     {
+        $personal = Personal::findOrFail($id);
+
         $request->validate([
-            'dni' => 'required|size:8|unique:personal,dni',
+            'dni' => "required|size:8|unique:personal,dni,$id",
             'nombres' => 'required',
             'apellidos' => 'required',
             'sexo' => 'required|in:masculino,femenino,otro',
@@ -46,9 +75,8 @@ class C_Personal extends Controller
             'profesion_id' => 'required|exists:profesiones,id',
         ]);
 
-        $request['estado_personal'] = 'activo'; // por defecto
-        Personal::create($request->all());
+        $personal->update($request->all());
 
-        return redirect('/personal')->with('success', 'Personal registrado correctamente');
+        return redirect('/ver_personal')->with('success', 'Datos actualizados correctamente.');
     }
 }

@@ -12,4 +12,10 @@ class Area extends Model
     protected $table = 'areas'; // Asegúrate que sea correcto si cambiaste el nombre
 
     protected $fillable = ['nombre'];
+
+    public function personal()
+{
+    return $this->hasMany(Personal::class);
+}
+
 }

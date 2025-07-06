@@ -1,0 +1,42 @@
+.contenedor-asistencias {
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.titulo-seccion {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1c2f4a;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tabla thead {
+    background-color: #1c2f4a;
+    color: white;
+}
+
+.tabla th,
+.tabla td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.estado-asistio {
+    color: green;
+    font-weight: bold;
+}
+
+.estado-falta {
+    color: red;
+    font-weight: bold;
+}

@@ -14,4 +14,6 @@ class Profesion extends Model
     {
         return $this->hasMany(Personal::class);
     }
+
+    
 }

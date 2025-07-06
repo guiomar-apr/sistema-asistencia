@@ -1,0 +1,109 @@
+.contenedor-cronograma {
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: auto;
+}
+
+.titulo-seccion {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #1c2f4a;
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.tabla-cronograma {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: center;
+    table-layout: fixed; /* 👈 Esto fuerza a que todas las columnas tengan el mismo tamaño */
+}
+
+.tabla-cronograma th,
+.tabla-cronograma td {
+    padding: 6px;
+    border: 1px solid #ccc;
+    width: 35px; /* 👈 Tamaño fijo para cada día */
+    height: 35px; /* 👈 Altura fija para mejor presentación */
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tabla-cronograma thead {
+    background-color: #1c2f4a;
+    color: white;
+}
+
+.tabla-cronograma th:nth-child(2) {
+    width: 200px; /* Más ancho para nombres */
+}
+
+.tabla-cronograma th:first-child,
+.tabla-cronograma td:first-child {
+    width: 30px; /* Número */
+}
+
+/* Colores por tipo */
+.turno-gd {
+    background-color: #e0f7fa;
+    color: #006064;
+    font-weight: bold;
+}
+
+.turno-vacaciones {
+    background-color: #ffe0b2;
+    color: #bf360c;
+    font-weight: bold;
+}
+
+.turno-descanso {
+    background-color: #f8bbd0;
+    color: #880e4f;
+    font-weight: bold;
+}
+
+/* Formulario */
+.formulario-cronograma {
+    background-color: #f0f4f8;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    max-width: 1000px;
+}
+
+.formulario-cronograma label {
+    font-weight: 500;
+    min-width: 120px;
+}
+
+.formulario-cronograma input,
+.formulario-cronograma select {
+    padding: 8px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 180px;
+}
+
+.formulario-cronograma button {
+    background-color: #1c2f4a;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
